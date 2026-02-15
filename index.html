@@ -78,6 +78,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 20px;
   }
 
   .heart { position: absolute; color: #ff4d6d; pointer-events: none; animation: float 3s linear forwards; }
@@ -90,7 +91,7 @@
 <body>
 
 <div id="main-content">
-  <h1>Honganh, will you be my Valentine? 🌹</h1>
+  <h1>Honganh, will you be my late-ish Valentine? 🌹</h1>
   <div class="buttons-container">
     <button id="yes" onclick="showSuccess()">YES! ❤️</button>
     <button id="no" ontouchstart="moveNo(event)" onclick="moveNo(event)">No 😅</button>
@@ -103,8 +104,8 @@
 </div>
 
 <div id="success-message">
-  <h1 style="font-size: 3em;">YAY! 🥰</h1>
-  <p style="font-size: 1.5em;">See you soon, Honganh! ❤️</p>
+  <h1 style="font-size: 2.5em;">YAY! 🥰</h1>
+  <p style="font-size: 1.5em; color: #ff4d6d; font-weight: bold;">Happy late Valentines em yeu!! ❤️</p>
   <div style="font-size: 60px;">🐱💖✨</div>
 </div>
 
@@ -115,20 +116,16 @@
   const catPopup = document.getElementById('cat-popup');
 
   function moveNo(e) {
-    if(e) e.preventDefault(); // Prevents iPhone from zooming in/out
+    if(e) e.preventDefault();
 
-    // Show cat
     catPopup.style.display = 'flex';
     setTimeout(() => { catPopup.style.opacity = '1'; }, 10);
     
-    // Hide cat after 1 second
     setTimeout(() => {
       catPopup.style.opacity = '0';
       setTimeout(() => { catPopup.style.display = 'none'; }, 200);
     }, 1000);
 
-    // Random movement logic
-    // We stay within 80% of screen to keep the button visible
     const x = Math.random() * (window.innerWidth - 100);
     const y = Math.random() * (window.innerHeight - 100);
     
@@ -136,8 +133,7 @@
     noBtn.style.left = x + 'px';
     noBtn.style.top = y + 'px';
 
-    // Grow the YES button
-    yesScale += 0.4;
+    yesScale += 0.45;
     yesBtn.style.transform = `scale(${yesScale})`;
   }
 
