@@ -2,158 +2,176 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>honganh will you be my valentine?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For Honganh ❤️</title>
 <style>
+  :root {
+    --primary-red: #ff4d6d;
+    --soft-pink: #ffccd5;
+  }
+
   body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: pink;
-    font-family: 'Arial', sans-serif;
+    background: var(--soft-pink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     text-align: center;
     overflow: hidden;
     margin: 0;
-    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #main-card {
+    padding: 20px;
+    z-index: 10;
   }
 
   h1 {
-    font-size: 2.5em;
-    color: red;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 5px #fff;
+    font-size: 2.2em;
+    color: var(--primary-red);
+    margin-bottom: 40px;
+    font-weight: 800;
   }
 
-  .buttons {
-    position: relative;
-    width: 90%;
-    max-width: 300px;
-    height: 150px;
-    margin: auto;
+  .buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-height: 300px;
   }
 
   button {
-    padding: 15px 30px;
-    font-size: 1.5em;
+    padding: 15px 35px;
+    font-size: 1.2em;
+    font-weight: bold;
     border: none;
-    border-radius: 50px;
+    border-radius: 30px;
     cursor: pointer;
-    position: absolute;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     touch-action: manipulation;
   }
 
   #yes {
-    background-color: red;
+    background-color: var(--primary-red);
     color: white;
-    left: 0;
-    top: 50px;
+    z-index: 2;
   }
 
   #no {
     background-color: white;
-    color: red;
-    right: 0;
-    top: 50px;
+    color: var(--primary-red);
+    position: relative;
   }
 
-  /* Heart animation */
+  /* Success Screen */
+  #success-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--soft-pink);
+    z-index: 100;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Floating Hearts */
   .heart {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    transform: rotate(-45deg);
-    animation: float 4s linear infinite;
+    color: var(--primary-red);
+    font-size: 20px;
+    user-select: none;
+    pointer-events: none;
+    animation: floatUp 4s linear forwards;
   }
 
-  .heart::before,
-  .heart::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    border-radius: 50%;
-  }
-
-  .heart::before { top: -10px; left: 0; }
-  .heart::after { left: 10px; top: 0; }
-
-  @keyframes float {
-    0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
-    100% { transform: translateY(-600px) rotate(-45deg); opacity: 0; }
-  }
-
-  /* Confetti */
-  .confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 0;
-    animation: fall 2s linear forwards;
-  }
-
-  @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(500px) rotate(360deg); }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(1); opacity: 1; }
+    100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
   }
 </style>
 </head>
 <body>
 
-<div>
-  <h1>honganh will you be my valentine?</h1>
-  <div class="buttons">
-    <button id="yes" onclick="yesClicked()">Yes ❤️</button>
+<div id="main-card">
+  <h1>Honganh, will you be my Valentine? 🌹</h1>
+  <div class="buttons-container">
+    <button id="yes">YES! ❤️</button>
     <button id="no">No 😅</button>
   </div>
 </div>
 
+<div id="success-message">
+  <h1 style="font-size: 3em;">YAY! 🥰</h1>
+  <p style="font-size: 1.5em; color: #ff4d6d;">See you soon! ❤️</p>
+  <div style="font-size: 80px;">✨</div>
+</div>
+
 <script>
-  const noButton = document.getElementById('no');
-  const container = document.querySelector('.buttons');
+  const yesBtn = document.getElementById('yes');
+  const noBtn = document.getElementById('no');
+  const successScreen = document.getElementById('success-message');
+  
+  let yesScale = 1;
+  let noClicks = 0;
 
-  // On touch or click, move the "No" button randomly
-  noButton.addEventListener('touchstart', moveNo);
-  noButton.addEventListener('click', moveNo);
+  const phrases = [
+    "Are you sure?",
+    "Really sure??",
+    "Think again! 🥺",
+    "Last chance...",
+    "Surely not?",
+    "You're breaking my heart ;(",
+    "I'm gonna cry...",
+    "Honganh pls"
+  ];
 
-  function moveNo() {
-    const containerWidth = container.offsetWidth - noButton.offsetWidth;
-    const containerHeight = container.offsetHeight - noButton.offsetHeight;
+  function moveNo(e) {
+    if (e) e.preventDefault();
+    
+    // Move button
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
 
-    const randomX = Math.floor(Math.random() * containerWidth);
-    const randomY = Math.floor(Math.random() * containerHeight);
-
-    noButton.style.left = randomX + 'px';
-    noButton.style.top = randomY + 'px';
+    // Make Yes button bigger
+    yesScale += 0.4;
+    yesBtn.style.transform = `scale(${yesScale})`;
+    
+    // Change No button text
+    noBtn.textContent = phrases[noClicks % phrases.length];
+    noClicks++;
   }
 
-  // Heart background animation
-  function createHeart() {
-    const heart = document.createElement('div');
-    heart.classList.add('heart');
-    heart.style.left = Math.random() * window.innerWidth + 'px';
-    heart.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 4000);
-  }
+  // Mobile and Desktop events
+  noBtn.addEventListener('touchstart', moveNo);
+  noBtn.addEventListener('mouseover', moveNo);
 
-  setInterval(createHeart, 500);
+  yesBtn.addEventListener('click', () => {
+    successScreen.style.display = 'flex';
+    startHearts();
+  });
 
-  // Yes click with confetti
-  function yesClicked() {
-    for(let i = 0; i < 30; i++) {
-      const confetti = document.createElement('div');
-      confetti.classList.add('confetti');
-      confetti.style.left = Math.random() * window.innerWidth + 'px';
-      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-      document.body.appendChild(confetti);
-      setTimeout(() => confetti.remove(), 2000);
-    }
-    alert("YAY!! ❤️");
+  function startHearts() {
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerHTML = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }, 300);
   }
 </script>
 
