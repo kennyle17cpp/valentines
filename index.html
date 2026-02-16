@@ -24,21 +24,20 @@
     touch-action: manipulation;
   }
 
-  /* Hearts float ABOVE the glass card */
   .floating-heart {
     position: absolute;
     color: var(--heart-red);
     opacity: 0.6;
     z-index: 50; 
     pointer-events: none;
-    animation: moveUp 6s linear forwards;
+    will-change: transform; /* Boosts performance on iPhone */
+    animation: moveUp 5s linear forwards;
   }
 
   @keyframes moveUp {
-    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
     10% { opacity: 0.6; }
-    90% { opacity: 0.6; }
-    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    100% { transform: translateY(-25vh) rotate(360deg); opacity: 0; }
   }
 
   #main-content {
@@ -51,27 +50,16 @@
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     z-index: 10;
-    position: relative;
   }
 
-  h1 { 
-    font-size: 1.8em; 
-    color: var(--heart-red); 
-    margin-bottom: 20px;
-    animation: wobble 3s ease-in-out infinite;
-  }
-
-  @keyframes wobble {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
-  }
+  h1 { font-size: 1.8em; color: var(--heart-red); margin-bottom: 20px; }
 
   .buttons-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    height: 350px; /* Space for button to grow */
+    min-height: 200px;
   }
 
   button {
@@ -84,21 +72,10 @@
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  #yes { 
-    background-color: var(--heart-red); 
-    color: white; 
-    z-index: 100;
-    animation: heartbeat 1.2s infinite;
-  }
-
-  @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-
+  #yes { background-color: var(--heart-red); color: white; z-index: 100; animation: heartbeat 1.2s infinite; }
+  @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
   #no { background-color: white; color: var(--heart-red); z-index: 5; }
 
-  /* Cat Pop-up */
   #cat-popup {
     display: none;
     position: fixed;
@@ -116,24 +93,19 @@
     opacity: 0;
     transition: opacity 0.2s;
   }
-
   #cat-popup img { width: 100%; border-radius: 15px; }
 
-  /* Success Screen */
   #success-message {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     background: var(--bg-pink);
     z-index: 2000;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-
   .dancing-cat { width: 150px; border-radius: 15px; margin-bottom: 20px; }
 </style>
 </head>
@@ -165,27 +137,28 @@
   const catPopup = document.getElementById('cat-popup');
   let yesScale = 1;
 
-  // Continuous floating background hearts
   function createHeart(isSuccess) {
     const heart = document.createElement('div');
     heart.className = 'floating-heart';
     heart.innerHTML = '❤️';
     heart.style.left = Math.random() * 100 + 'vw';
     heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
-    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-    
-    if (isSuccess) heart.style.zIndex = "3000";
-    
+    // Success screen hearts go faster and stay on top
+    if (isSuccess) {
+        heart.style.zIndex = "3000";
+        heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    }
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
+    // Remove heart exactly when animation ends to save memory
+    setTimeout(() => heart.remove(), 5000);
   }
 
-  setInterval(() => createHeart(false), 450);
+  // Background hearts
+  let heartInterval = setInterval(() => createHeart(false), 500);
 
   function moveNo(e) {
     if(e) e.preventDefault();
     
-    // Show surprised cat
     catPopup.style.display = 'flex';
     setTimeout(() => catPopup.style.opacity = '1', 10);
     setTimeout(() => {
@@ -193,26 +166,25 @@
       setTimeout(() => catPopup.style.display = 'none', 200);
     }, 1100);
 
-    // Randomize No button position
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
+    // Keep No button in the safe "middle" area of the iPhone
+    const safePadding = 80; 
+    const x = Math.random() * (window.innerWidth - safePadding * 2) + safePadding;
+    const y = Math.random() * (window.innerHeight - safePadding * 2) + safePadding;
+    
     noBtn.style.position = 'fixed';
-    noBtn.style.left = Math.max(10, x) + 'px';
-    noBtn.style.top = Math.max(10, y) + 'px';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    noBtn.style.transform = 'translate(-50%, -50%)';
 
-    // THE GROWING LOGIC:
     yesScale += 0.45; 
     yesBtn.style.transform = `scale(${yesScale})`;
-
-    // Stop the heartbeat pulse once it's big so it doesn't look weird
-    if (yesScale > 2) {
-      yesBtn.style.animation = "none";
-    }
+    if (yesScale > 2.5) yesBtn.style.animation = "none";
   }
 
   function showSuccess() {
+    clearInterval(heartInterval); // Stop old slow hearts
     document.getElementById('success-message').style.display = 'flex';
-    setInterval(() => createHeart(true), 150);
+    setInterval(() => createHeart(true), 200); // Start fast celebration hearts
   }
 </script>
 
