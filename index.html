@@ -21,86 +21,82 @@
     text-align: center;
     overflow: hidden;
     margin: 0;
-    padding: 0;
     touch-action: manipulation;
   }
 
-  /* Animated Background */
-  .bg-heart {
+  /* Hearts now float ABOVE everything */
+  .floating-heart {
     position: absolute;
-    color: rgba(255, 77, 109, 0.2);
-    font-size: 20px;
-    z-index: 0;
-    animation: bgFloat 10s linear infinite;
+    color: var(--heart-red);
+    opacity: 0.6;
+    z-index: 50; /* Higher than the glass card */
+    pointer-events: none;
+    animation: moveUp 6s linear forwards;
   }
 
-  @keyframes bgFloat {
-    from { transform: translateY(110vh) rotate(0deg); opacity: 0.5; }
-    to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  @keyframes moveUp {
+    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
   }
 
   #main-content {
-    width: 90%;
-    max-width: 400px;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px); /* Frosted Glass */
+    width: 85%;
+    max-width: 350px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.3); /* Lighter glass */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 30px;
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     z-index: 10;
-    animation: fadeIn 1.5s ease;
+    position: relative;
   }
 
   h1 { 
-    font-size: 2em; 
+    font-size: 1.8em; 
     color: var(--heart-red); 
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
-    animation: floatTitle 3s ease-in-out infinite;
+    margin-bottom: 20px;
+    animation: wobble 3s ease-in-out infinite;
   }
 
-  @keyframes floatTitle {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
   }
 
   .buttons-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    gap: 15px;
     height: 300px;
-    width: 100%;
-    position: relative;
   }
 
   button {
-    padding: 18px 40px;
-    font-size: 1.3em;
-    font-weight: 800;
+    padding: 15px 35px;
+    font-size: 1.2em;
+    font-weight: bold;
     border: none;
-    border-radius: 50px;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
   }
 
   #yes { 
     background-color: var(--heart-red); 
     color: white; 
-    z-index: 100; 
-    position: relative;
-    animation: heartbeat 1.5s infinite;
+    z-index: 100;
+    animation: heartbeat 1.2s infinite;
   }
 
   @keyframes heartbeat {
-    0% { transform: scale(1); }
-    15% { transform: scale(1.1); }
-    30% { transform: scale(1); }
-    45% { transform: scale(1.15); }
-    60% { transform: scale(1); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
   }
 
-  #no { background-color: white; color: var(--heart-red); position: relative; z-index: 10; }
+  #no { background-color: white; color: var(--heart-red); z-index: 5; }
 
   /* Cat Pop-up */
   #cat-popup {
@@ -109,21 +105,21 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 280px;
+    width: 260px;
     background: white;
     padding: 15px;
-    border-radius: 25px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     z-index: 1000;
     flex-direction: column;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s;
   }
 
-  #cat-popup img { width: 100%; border-radius: 20px; }
+  #cat-popup img { width: 100%; border-radius: 15px; }
 
-  /* Success Message */
+  /* Success Screen */
   #success-message {
     display: none;
     position: fixed;
@@ -138,24 +134,10 @@
     align-items: center;
   }
 
-  .dancing-cat { width: 180px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-
-  @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+  .dancing-cat { width: 150px; border-radius: 15px; margin-bottom: 20px; }
 </style>
 </head>
 <body>
-
-<script>
-  for (let i = 0; i < 20; i++) {
-    const bgHeart = document.createElement('div');
-    bgHeart.className = 'bg-heart';
-    bgHeart.innerHTML = '❤️';
-    bgHeart.style.left = Math.random() * 100 + 'vw';
-    bgHeart.style.animationDelay = Math.random() * 10 + 's';
-    bgHeart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-    document.body.appendChild(bgHeart);
-  }
-</script>
 
 <div id="main-content">
   <h1>Honganh, will you be my late-ish Valentine? 🌹</h1>
@@ -167,56 +149,68 @@
 
 <div id="cat-popup">
   <img src="cat.jpeg" alt="Surprised Cat">
-  <p style="color: #ff4d6d; font-weight: bold; margin-top: 15px;">EXCUSE ME?! 👁️👄👁️</p>
+  <p style="color: #ff4d6d; font-weight: bold; margin-top: 10px;">EXCUSE ME?! 👁️👄👁️</p>
 </div>
 
 <div id="success-message">
   <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" class="dancing-cat">
-  <h1 style="font-size: 2.5em; margin: 0;">YAY! 🥰</h1>
-  <p style="font-size: 1.4em; color: #ff4d6d; font-weight: bold; padding: 0 25px;">Happy late Valentines em yeu!! ❤️</p>
-  <div style="font-size: 50px;">🐱✨💖</div>
+  <h1 style="font-size: 2.2em; margin: 0;">YAY! 🥰</h1>
+  <p style="font-size: 1.3em; color: #ff4d6d; font-weight: bold; padding: 0 20px;">Happy late Valentines em yeu!! ❤️</p>
+  <div style="font-size: 40px;">🐱✨💖</div>
 </div>
 
 <script>
-  let yesScale = 1;
   const noBtn = document.getElementById('no');
   const yesBtn = document.getElementById('yes');
   const catPopup = document.getElementById('cat-popup');
+  let yesScale = 1;
+
+  // Function to create hearts constantly
+  function createHeart(isSuccess) {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+    
+    // If on success screen, make them z-index 3000
+    if (isSuccess) heart.style.zIndex = "3000";
+    
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }
+
+  // Start background hearts immediately
+  setInterval(() => createHeart(false), 400);
 
   function moveNo(e) {
     if(e) e.preventDefault();
+    
+    // Show cat
     catPopup.style.display = 'flex';
-    setTimeout(() => { catPopup.style.opacity = '1'; }, 10);
+    setTimeout(() => catPopup.style.opacity = '1', 10);
     setTimeout(() => {
       catPopup.style.opacity = '0';
-      setTimeout(() => { catPopup.style.display = 'none'; }, 200);
-    }, 1200);
+      setTimeout(() => catPopup.style.display = 'none', 200);
+    }, 1100);
 
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 120);
+    // Move button
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
     noBtn.style.position = 'fixed';
     noBtn.style.left = Math.max(10, x) + 'px';
     noBtn.style.top = Math.max(10, y) + 'px';
 
+    // Grow Yes
     yesScale += 0.4;
     yesBtn.style.transform = `scale(${yesScale})`;
-    // Disable heartbeat once it gets huge so it doesn't look glitchy
-    if(yesScale > 3) yesBtn.style.animation = 'none';
   }
 
   function showSuccess() {
     document.getElementById('success-message').style.display = 'flex';
-    setInterval(() => {
-      const heart = document.createElement('div');
-      heart.style.position = 'absolute';
-      heart.style.color = '#ff4d6d';
-      heart.innerHTML = '❤️';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-      heart.style.animation = `bgFloat ${Math.random() * 2 + 2}s linear forwards`;
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 3000);
-    }, 200);
+    // Faster hearts for celebration
+    setInterval(() => createHeart(true), 150);
   }
 </script>
 
