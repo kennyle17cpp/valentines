@@ -5,13 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>For Honganh ❤️</title>
 <style>
+  :root {
+    --bg-pink: #ffccd5;
+    --heart-red: #ff4d6d;
+  }
+
   body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     width: 100vw;
-    background: #ffccd5;
+    background: var(--bg-pink);
     font-family: -apple-system, sans-serif;
     text-align: center;
     overflow: hidden;
@@ -20,15 +25,43 @@
     touch-action: manipulation;
   }
 
-  #main-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
+  /* Animated Background */
+  .bg-heart {
+    position: absolute;
+    color: rgba(255, 77, 109, 0.2);
+    font-size: 20px;
+    z-index: 0;
+    animation: bgFloat 10s linear infinite;
   }
 
-  h1 { font-size: 1.8em; color: #ff4d6d; padding: 0 20px; text-shadow: 1px 1px 2px white; margin-bottom: 20px; }
+  @keyframes bgFloat {
+    from { transform: translateY(110vh) rotate(0deg); opacity: 0.5; }
+    to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  #main-content {
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px); /* Frosted Glass */
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    z-index: 10;
+    animation: fadeIn 1.5s ease;
+  }
+
+  h1 { 
+    font-size: 2em; 
+    color: var(--heart-red); 
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+    animation: floatTitle 3s ease-in-out infinite;
+  }
+
+  @keyframes floatTitle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
 
   .buttons-container {
     display: flex;
@@ -36,37 +69,51 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
-    height: 350px;
+    height: 300px;
     width: 100%;
     position: relative;
   }
 
   button {
-    padding: 15px 35px;
-    font-size: 1.2em;
-    font-weight: bold;
+    padding: 18px 40px;
+    font-size: 1.3em;
+    font-weight: 800;
     border: none;
-    border-radius: 30px;
+    border-radius: 50px;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
 
-  #yes { background-color: #ff4d6d; color: white; z-index: 100; position: relative; }
-  #no { background-color: white; color: #ff4d6d; position: relative; z-index: 10; }
+  #yes { 
+    background-color: var(--heart-red); 
+    color: white; 
+    z-index: 100; 
+    position: relative;
+    animation: heartbeat 1.5s infinite;
+  }
 
-  /* Surprised Cat Pop-up */
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.1); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(1); }
+  }
+
+  #no { background-color: white; color: var(--heart-red); position: relative; z-index: 10; }
+
+  /* Cat Pop-up */
   #cat-popup {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 280px;
+    width: 280px;
     background: white;
     padding: 15px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     z-index: 1000;
     flex-direction: column;
     align-items: center;
@@ -74,10 +121,9 @@
     transition: opacity 0.2s ease;
   }
 
-  #cat-popup img { width: 100%; border-radius: 15px; }
-  #cat-popup p { color: #ff4d6d; font-weight: bold; margin-top: 15px; font-size: 1.2em; }
+  #cat-popup img { width: 100%; border-radius: 20px; }
 
-  /* Centered Success Screen */
+  /* Success Message */
   #success-message {
     display: none;
     position: fixed;
@@ -85,29 +131,31 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #ffccd5;
+    background: var(--bg-pink);
     z-index: 2000;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .dancing-cat {
-    width: 160px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-  }
+  .dancing-cat { width: 180px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
-  .heart { position: absolute; color: #ff4d6d; pointer-events: none; animation: float 3s linear forwards; }
-  @keyframes float {
-    0% { transform: translateY(105vh) scale(1); opacity: 1; }
-    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-  }
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 </style>
 </head>
 <body>
+
+<script>
+  for (let i = 0; i < 20; i++) {
+    const bgHeart = document.createElement('div');
+    bgHeart.className = 'bg-heart';
+    bgHeart.innerHTML = '❤️';
+    bgHeart.style.left = Math.random() * 100 + 'vw';
+    bgHeart.style.animationDelay = Math.random() * 10 + 's';
+    bgHeart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+    document.body.appendChild(bgHeart);
+  }
+</script>
 
 <div id="main-content">
   <h1>Honganh, will you be my late-ish Valentine? 🌹</h1>
@@ -119,14 +167,14 @@
 
 <div id="cat-popup">
   <img src="cat.jpeg" alt="Surprised Cat">
-  <p>EXCUSE ME?! 👁️👄👁️</p>
+  <p style="color: #ff4d6d; font-weight: bold; margin-top: 15px;">EXCUSE ME?! 👁️👄👁️</p>
 </div>
 
 <div id="success-message">
-  <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" class="dancing-cat" alt="Dancing Cat">
-  <h1 style="font-size: 2.2em; margin: 10px 0;">YAY! 🥰</h1>
+  <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" class="dancing-cat">
+  <h1 style="font-size: 2.5em; margin: 0;">YAY! 🥰</h1>
   <p style="font-size: 1.4em; color: #ff4d6d; font-weight: bold; padding: 0 25px;">Happy late Valentines em yeu!! ❤️</p>
-  <div style="font-size: 40px; margin-top: 10px;">✨🐱✨</div>
+  <div style="font-size: 50px;">🐱✨💖</div>
 </div>
 
 <script>
@@ -142,7 +190,7 @@
     setTimeout(() => {
       catPopup.style.opacity = '0';
       setTimeout(() => { catPopup.style.display = 'none'; }, 200);
-    }, 1000);
+    }, 1200);
 
     const x = Math.random() * (window.innerWidth - 120);
     const y = Math.random() * (window.innerHeight - 120);
@@ -150,21 +198,25 @@
     noBtn.style.left = Math.max(10, x) + 'px';
     noBtn.style.top = Math.max(10, y) + 'px';
 
-    yesScale += 0.45;
+    yesScale += 0.4;
     yesBtn.style.transform = `scale(${yesScale})`;
+    // Disable heartbeat once it gets huge so it doesn't look glitchy
+    if(yesScale > 3) yesBtn.style.animation = 'none';
   }
 
   function showSuccess() {
     document.getElementById('success-message').style.display = 'flex';
     setInterval(() => {
       const heart = document.createElement('div');
-      heart.classList.add('heart');
+      heart.style.position = 'absolute';
+      heart.style.color = '#ff4d6d';
       heart.innerHTML = '❤️';
       heart.style.left = Math.random() * 100 + 'vw';
       heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+      heart.style.animation = `bgFloat ${Math.random() * 2 + 2}s linear forwards`;
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 3000);
-    }, 300);
+    }, 200);
   }
 </script>
 
