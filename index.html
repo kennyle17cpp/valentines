@@ -25,9 +25,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 1;
   }
 
-  h1 { font-size: 2em; color: #ff4d6d; padding: 0 20px; text-shadow: 1px 1px 2px white; margin: 0 0 20px 0; }
+  h1 { font-size: 1.8em; color: #ff4d6d; padding: 0 20px; text-shadow: 1px 1px 2px white; margin-bottom: 20px; }
 
   .buttons-container {
     display: flex;
@@ -90,6 +91,13 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .dancing-cat {
+    width: 160px;
+    margin-bottom: 10px;
+    border-radius: 15px;
   }
 
   .heart { position: absolute; color: #ff4d6d; pointer-events: none; animation: float 3s linear forwards; }
@@ -115,9 +123,10 @@
 </div>
 
 <div id="success-message">
-  <h1 style="font-size: 2.5em; margin: 0;">YAY! 🥰</h1>
-  <p style="font-size: 1.5em; color: #ff4d6d; font-weight: bold; padding: 0 20px;">Happy late Valentines em yeu!! ❤️</p>
-  <div style="font-size: 60px;">🐱💖✨</div>
+  <img src="https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif" class="dancing-cat" alt="Dancing Cat">
+  <h1 style="font-size: 2.2em; margin: 10px 0;">YAY! 🥰</h1>
+  <p style="font-size: 1.4em; color: #ff4d6d; font-weight: bold; padding: 0 25px;">Happy late Valentines em yeu!! ❤️</p>
+  <div style="font-size: 40px; margin-top: 10px;">✨🐱✨</div>
 </div>
 
 <script>
@@ -128,19 +137,15 @@
 
   function moveNo(e) {
     if(e) e.preventDefault();
-
     catPopup.style.display = 'flex';
     setTimeout(() => { catPopup.style.opacity = '1'; }, 10);
-    
     setTimeout(() => {
       catPopup.style.opacity = '0';
       setTimeout(() => { catPopup.style.display = 'none'; }, 200);
     }, 1000);
 
-    // Keep button movement within visible bounds
     const x = Math.random() * (window.innerWidth - 120);
     const y = Math.random() * (window.innerHeight - 120);
-    
     noBtn.style.position = 'fixed';
     noBtn.style.left = Math.max(10, x) + 'px';
     noBtn.style.top = Math.max(10, y) + 'px';
