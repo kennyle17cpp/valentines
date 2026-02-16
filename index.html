@@ -24,12 +24,12 @@
     touch-action: manipulation;
   }
 
-  /* Hearts now float ABOVE everything */
+  /* Hearts float ABOVE the glass card */
   .floating-heart {
     position: absolute;
     color: var(--heart-red);
     opacity: 0.6;
-    z-index: 50; /* Higher than the glass card */
+    z-index: 50; 
     pointer-events: none;
     animation: moveUp 6s linear forwards;
   }
@@ -45,7 +45,7 @@
     width: 85%;
     max-width: 350px;
     padding: 25px;
-    background: rgba(255, 255, 255, 0.3); /* Lighter glass */
+    background: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 30px;
@@ -71,7 +71,7 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    height: 300px;
+    height: 350px; /* Space for button to grow */
   }
 
   button {
@@ -81,7 +81,7 @@
     border: none;
     border-radius: 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   #yes { 
@@ -93,7 +93,7 @@
 
   @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.05); }
   }
 
   #no { background-color: white; color: var(--heart-red); z-index: 5; }
@@ -165,7 +165,7 @@
   const catPopup = document.getElementById('cat-popup');
   let yesScale = 1;
 
-  // Function to create hearts constantly
+  // Continuous floating background hearts
   function createHeart(isSuccess) {
     const heart = document.createElement('div');
     heart.className = 'floating-heart';
@@ -174,20 +174,18 @@
     heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
     heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
     
-    // If on success screen, make them z-index 3000
     if (isSuccess) heart.style.zIndex = "3000";
     
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 6000);
   }
 
-  // Start background hearts immediately
-  setInterval(() => createHeart(false), 400);
+  setInterval(() => createHeart(false), 450);
 
   function moveNo(e) {
     if(e) e.preventDefault();
     
-    // Show cat
+    // Show surprised cat
     catPopup.style.display = 'flex';
     setTimeout(() => catPopup.style.opacity = '1', 10);
     setTimeout(() => {
@@ -195,21 +193,25 @@
       setTimeout(() => catPopup.style.display = 'none', 200);
     }, 1100);
 
-    // Move button
+    // Randomize No button position
     const x = Math.random() * (window.innerWidth - 100);
     const y = Math.random() * (window.innerHeight - 100);
     noBtn.style.position = 'fixed';
     noBtn.style.left = Math.max(10, x) + 'px';
     noBtn.style.top = Math.max(10, y) + 'px';
 
-    // Grow Yes
-    yesScale += 0.4;
+    // THE GROWING LOGIC:
+    yesScale += 0.45; 
     yesBtn.style.transform = `scale(${yesScale})`;
+
+    // Stop the heartbeat pulse once it's big so it doesn't look weird
+    if (yesScale > 2) {
+      yesBtn.style.animation = "none";
+    }
   }
 
   function showSuccess() {
     document.getElementById('success-message').style.display = 'flex';
-    // Faster hearts for celebration
     setInterval(() => createHeart(true), 150);
   }
 </script>
