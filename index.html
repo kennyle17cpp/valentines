@@ -10,24 +10,34 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     background: #ffccd5;
     font-family: -apple-system, sans-serif;
     text-align: center;
     overflow: hidden;
     margin: 0;
+    padding: 0;
     touch-action: manipulation;
   }
 
-  h1 { font-size: 2em; color: #ff4d6d; padding: 0 20px; text-shadow: 1px 1px 2px white; }
+  #main-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 { font-size: 2em; color: #ff4d6d; padding: 0 20px; text-shadow: 1px 1px 2px white; margin: 0 0 20px 0; }
 
   .buttons-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 20px;
-    height: 300px;
+    height: 350px;
     width: 100%;
-    margin-top: 20px;
+    position: relative;
   }
 
   button {
@@ -40,7 +50,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
 
-  #yes { background-color: #ff4d6d; color: white; z-index: 100; }
+  #yes { background-color: #ff4d6d; color: white; z-index: 100; position: relative; }
   #no { background-color: white; color: #ff4d6d; position: relative; z-index: 10; }
 
   /* Surprised Cat Pop-up */
@@ -66,24 +76,25 @@
   #cat-popup img { width: 100%; border-radius: 15px; }
   #cat-popup p { color: #ff4d6d; font-weight: bold; margin-top: 15px; font-size: 1.2em; }
 
+  /* Centered Success Screen */
   #success-message {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background: #ffccd5;
     z-index: 2000;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    text-align: center;
   }
 
   .heart { position: absolute; color: #ff4d6d; pointer-events: none; animation: float 3s linear forwards; }
   @keyframes float {
-    0% { transform: translateY(100vh) scale(1); opacity: 1; }
+    0% { transform: translateY(105vh) scale(1); opacity: 1; }
     100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
   }
 </style>
@@ -104,8 +115,8 @@
 </div>
 
 <div id="success-message">
-  <h1 style="font-size: 2.5em;">YAY! 🥰</h1>
-  <p style="font-size: 1.5em; color: #ff4d6d; font-weight: bold;">Happy late Valentines em yeu!! ❤️</p>
+  <h1 style="font-size: 2.5em; margin: 0;">YAY! 🥰</h1>
+  <p style="font-size: 1.5em; color: #ff4d6d; font-weight: bold; padding: 0 20px;">Happy late Valentines em yeu!! ❤️</p>
   <div style="font-size: 60px;">🐱💖✨</div>
 </div>
 
@@ -126,12 +137,13 @@
       setTimeout(() => { catPopup.style.display = 'none'; }, 200);
     }, 1000);
 
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
+    // Keep button movement within visible bounds
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 120);
     
     noBtn.style.position = 'fixed';
-    noBtn.style.left = x + 'px';
-    noBtn.style.top = y + 'px';
+    noBtn.style.left = Math.max(10, x) + 'px';
+    noBtn.style.top = Math.max(10, y) + 'px';
 
     yesScale += 0.45;
     yesBtn.style.transform = `scale(${yesScale})`;
